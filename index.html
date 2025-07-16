@@ -2,69 +2,59 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador Player</title>
-  <link rel="stylesheet" href="template.min.css" />
+  <title>Generador Enlace Fluid Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #121212;
+      color: #ffd700;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      background: #ffd700;
+      color: #121212;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    textarea {
+      height: 80px;
+      resize: none;
+      font-family: monospace;
+      background: #222;
+      color: #ffd700;
+    }
+  </style>
 </head>
 <body>
-  <div id="createIframe" style="display: block;">
-    <div class="form">
-      <ul class="tab-group">
-        <li class="tab active"><a href="#signup">Crear</a></li>
-        <li class="tab"><a href="#login">Código</a></li>
-      </ul>
-      <div class="tab-content">
-        <div id="signup">
-          <h1>Crear Player</h1>
-          <form>
-            <div class="top-row">
-              <div class="field-wrap">
-                <label>Player<span class="req">*</span></label>
-                <select name="player" required>
-                  <option value="">Selecciona Player</option>
-                  <option value="fluidplayer">Fluid Player</option>
-                  <option value="jwpl">JWPlayer</option>
-                  <option value="plyr">Plyr.io</option>
-                  <option value="video">Video</option>
-                </select>
-              </div>
-              <div class="field-wrap">
-                <label>Proveedor<span class="req">*</span></label>
-                <select name="provider" required disabled>
-                  <option value="">Selecciona Proveedor</option>
-                  <option value="gdrive">Google Drive</option>
-                  <option value="rand">Random</option>
-                  <option value="yt">YouTube</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-wrap">
-              <label>Formato Video<span class="req">*</span></label>
-              <input name="format" placeholder="disabled" type="text" disabled autocomplete="off" />
-            </div>
-            <div class="field-wrap">
-              <label>Link Video<span class="req">*</span></label>
-              <input name="link" type="text" placeholder="Pega el link o ID del video" required autocomplete="off" />
-            </div>
-            <button type="submit" class="button button-block">Confirmar</button>
-          </form>
-        </div>
-        <div id="login" style="display:none;">
-          <h1>Código generado</h1>
-          <div class="field-wrap">
-            <label>Código Iframe<span class="req">*</span></label>
-            <textarea id="ifcode" rows="6" readonly></textarea>
-          </div>
-          <div class="field-wrap">
-            <label>Link generado<span class="req">*</span></label>
-            <textarea id="links" rows="2" readonly></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <h1>Generador de enlace encriptado para Fluid Player</h1>
+  <p>Pega la URL del video (mp4 o m3u8):</p>
+  <input type="text" id="urlInput" placeholder="https://ejemplo.com/video.mp4" />
+  <button id="generateBtn">Generar enlace encriptado</button>
+  <p>Enlace generado:</p>
+  <textarea id="output" readonly></textarea>
 
-  <script src="template.min.js"></script>
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      var url = document.getElementById('urlInput').value.trim();
+      if (!url) {
+        alert('Por favor ingresa una URL válida');
+        return;
+      }
+      // Codificar URL a base64
+      var encoded = btoa(url);
+      // Crear enlace al desencriptador con parámetro
+      var link = window.location.origin + window.location.pathname.replace('generador.html', 'desencriptador.html') + '?video=' + encoded;
+      document.getElementById('output').value = link;
+    });
+  </script>
 </body>
 </html>
