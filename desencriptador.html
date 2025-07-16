@@ -13,6 +13,8 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: #ffd700;
+      font-family: Arial, sans-serif;
     }
     #video-wrapper {
       width: 90%;
@@ -30,7 +32,7 @@
   <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
   <script>
     function getQueryParam(param) {
-      var params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
       return params.get(param);
     }
 
@@ -42,23 +44,31 @@
       }
     }
 
-    var encodedVideo = getQueryParam('video');
+    const encodedVideo = getQueryParam('video');
     if (!encodedVideo) {
       alert('No se encontró el parámetro de video');
     } else {
-      var videoUrl = decodeBase64(encodedVideo);
+      const videoUrl = decodeBase64(encodedVideo);
       if (!videoUrl) {
         alert('Error al decodificar el enlace');
       } else {
-        var player = fluidPlayer('my-video', {
+        const player = fluidPlayer('my-video', {
           layoutControls: {
+            theaterMode: false,  // desactivar modo teatro
+            miniplayer: false,   // desactivar miniplayer
+            skipControls: {
+              forward: 10,       // avanzar 10 segundos
+              rewind: 10         // retroceder 10 segundos
+            },
             controlBar: {
               autoHide: true
             }
-          }
+          },
+          vastOptions: {}
         });
-        var videoElement = document.getElementById('my-video');
-        var source = document.createElement('source');
+
+        const videoElement = document.getElementById('my-video');
+        const source = document.createElement('source');
         source.src = videoUrl;
         if (videoUrl.endsWith('.m3u8')) {
           source.type = 'application/x-mpegURL';
