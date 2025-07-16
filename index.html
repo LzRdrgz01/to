@@ -32,6 +32,11 @@
       background: #222;
       color: #ffd700;
     }
+    a {
+      color: #ffd700;
+      word-break: break-all;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -41,19 +46,24 @@
   <button id="generateBtn">Generar enlace encriptado</button>
   <p>Enlace generado:</p>
   <textarea id="output" readonly></textarea>
+  <p>Haz clic para abrir el enlace:</p>
+  <a href="#" id="previewLink" target="_blank" rel="noopener noreferrer"></a>
 
   <script>
+    const baseUrl = 'https://lzrdrgz01.github.io/to/desencriptador.html';
+
     document.getElementById('generateBtn').addEventListener('click', () => {
       var url = document.getElementById('urlInput').value.trim();
       if (!url) {
         alert('Por favor ingresa una URL válida');
         return;
       }
-      // Codificar URL a base64
       var encoded = btoa(url);
-      // Crear enlace al desencriptador con parámetro
-      var link = window.location.origin + window.location.pathname.replace('generador.html', 'desencriptador.html') + '?video=' + encoded;
-      document.getElementById('output').value = link;
+      var fullLink = baseUrl + '?video=' + encoded;
+      document.getElementById('output').value = fullLink;
+      const preview = document.getElementById('previewLink');
+      preview.href = fullLink;
+      preview.textContent = fullLink;
     });
   </script>
 </body>
