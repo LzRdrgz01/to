@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reproductor Fluid Player - Video protegido</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0; 
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #video-wrapper {
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-wrapper">
+    <video id="my-video" controls preload="auto" width="100%" height="100%" playsinline></video>
+  </div>
+
+  <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+  <script>
+    // Función para obtener parámetros URL
+    function getQueryParam(param) {
+      var params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    // Decodificar base64 seguro para URL
+    function decodeBase64(str) {
+      try {
+        return atob(str);
+      } catch(e) {
+        return null;
+      }
+    }
+
+    var encodedVideo = getQueryParam('video');
+    if (!encodedVideo) {
+      alert('No se encontró el parámetro de video');
+    } else {
+      var videoUrl = decodeBase64(encodedVideo);
+      if (!videoUrl) {
+        alert('Error al decodificar el enlace');
+      } else {
+        // Inicializar Fluid Player
+        var player = fluidPlayer('my-video', {
+          layoutControls: {
+            controlBar: {
+              autoHide: true
+            }
+          },
+          vastOptions: {}, // Si quieres agregar publicidad, se puede configurar aquí
+          fluidOptions: {
+            layout: 'default',
+            // Puedes agregar más opciones si quieres
+          }
+        });
+        // Asignar fuente al video
+        var videoElement = document.getElementById('my-video');
+        // Crear la fuente correcta dependiendo la extensión
+        var source = document.createElement('source');
+        source.src = videoUrl;
+        if (videoUrl.endsWith('.m3u8')) {
+          source.type = 'application/x-mpegURL';
+        } else if (videoUrl.endsWith('.mp4')) {
+          source.type = 'video/mp4';
+        } else {
+          source.type = 'video/mp4'; // por defecto
+        }
+        videoElement.appendChild(source);
+        videoElement.load();
+      }
+    }
+  </script>
+</body>
+</html>
