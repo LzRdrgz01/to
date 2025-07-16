@@ -29,13 +29,11 @@
 
   <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
   <script>
-    // Función para obtener parámetros URL
     function getQueryParam(param) {
       var params = new URLSearchParams(window.location.search);
       return params.get(param);
     }
 
-    // Decodificar base64 seguro para URL
     function decodeBase64(str) {
       try {
         return atob(str);
@@ -52,22 +50,14 @@
       if (!videoUrl) {
         alert('Error al decodificar el enlace');
       } else {
-        // Inicializar Fluid Player
         var player = fluidPlayer('my-video', {
           layoutControls: {
             controlBar: {
               autoHide: true
             }
-          },
-          vastOptions: {}, // Si quieres agregar publicidad, se puede configurar aquí
-          fluidOptions: {
-            layout: 'default',
-            // Puedes agregar más opciones si quieres
           }
         });
-        // Asignar fuente al video
         var videoElement = document.getElementById('my-video');
-        // Crear la fuente correcta dependiendo la extensión
         var source = document.createElement('source');
         source.src = videoUrl;
         if (videoUrl.endsWith('.m3u8')) {
@@ -75,7 +65,7 @@
         } else if (videoUrl.endsWith('.mp4')) {
           source.type = 'video/mp4';
         } else {
-          source.type = 'video/mp4'; // por defecto
+          source.type = 'video/mp4';
         }
         videoElement.appendChild(source);
         videoElement.load();
