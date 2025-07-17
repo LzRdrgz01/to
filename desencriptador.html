@@ -2,39 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>PlayerLz</title>
+  <title>Reproductor Fluid Player - Video protegido</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-      padding: 0;
-      margin: 0;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100dvh;
-      background-color: #000;
+    body {
+      margin: 0; 
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #ffd700;
       font-family: Arial, sans-serif;
     }
-
     #video-wrapper {
-      width: 100%;
-      height: 100%;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
       background: #000;
     }
   </style>
 </head>
 <body>
   <div id="video-wrapper">
-    <video id="my-video" controls preload="auto" playsinline></video>
+    <video id="my-video" controls preload="auto" width="100%" height="100%" playsinline></video>
   </div>
 
   <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
@@ -47,33 +39,26 @@
     function decodeBase64(str) {
       try {
         return atob(str);
-      } catch (e) {
+      } catch(e) {
         return null;
       }
     }
 
     const encodedVideo = getQueryParam('video');
-
     if (!encodedVideo) {
       alert('No se encontró el parámetro de video');
     } else {
       const videoUrl = decodeBase64(encodedVideo);
-
       if (!videoUrl) {
         alert('Error al decodificar el enlace');
       } else {
-        const videoElement = document.getElementById('my-video');
-        const source = document.createElement('source');
-        source.src = videoUrl;
-        source.type = videoUrl.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4';
-        videoElement.appendChild(source);
-        videoElement.load();
-
-        fluidPlayer('my-video', {
+        const player = fluidPlayer('my-video', {
           layoutControls: {
+            theaterMode: false,  // desactivar modo teatro
+            miniplayer: false,   // desactivar miniplayer
             skipControls: {
-              forward: 10,
-              rewind: 10
+              forward: 10,       // avanzar 10 segundos
+              rewind: 10         // retroceder 10 segundos
             },
             controlBar: {
               autoHide: true
@@ -81,6 +66,19 @@
           },
           vastOptions: {}
         });
+
+        const videoElement = document.getElementById('my-video');
+        const source = document.createElement('source');
+        source.src = videoUrl;
+        if (videoUrl.endsWith('.m3u8')) {
+          source.type = 'application/x-mpegURL';
+        } else if (videoUrl.endsWith('.mp4')) {
+          source.type = 'video/mp4';
+        } else {
+          source.type = 'video/mp4';
+        }
+        videoElement.appendChild(source);
+        videoElement.load();
       }
     }
   </script>
