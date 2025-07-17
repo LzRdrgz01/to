@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Reproductor Fluid Player - Video protegido</title>
+  <title>Re</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" rel="stylesheet" />
   <style>
@@ -21,6 +21,12 @@
       max-width: 800px;
       aspect-ratio: 16 / 9;
       background: #000;
+    }
+
+    /* 🔒 Ocultar botones de theater mode y miniplayer */
+    .fluid_theatre_mode_button,
+    .fluid_control_button[data-title="Mini Player"] {
+      display: none !important;
     }
   </style>
 </head>
@@ -54,11 +60,11 @@
       } else {
         const player = fluidPlayer('my-video', {
           layoutControls: {
-            theaterMode: false,  // desactivar modo teatro
-            miniplayer: false,   // desactivar miniplayer
+            theaterMode: false,
+            miniplayer: false,
             skipControls: {
-              forward: 10,       // avanzar 10 segundos
-              rewind: 10         // retroceder 10 segundos
+              forward: 10,
+              rewind: 10
             },
             controlBar: {
               autoHide: true
@@ -72,8 +78,6 @@
         source.src = videoUrl;
         if (videoUrl.endsWith('.m3u8')) {
           source.type = 'application/x-mpegURL';
-        } else if (videoUrl.endsWith('.mp4')) {
-          source.type = 'video/mp4';
         } else {
           source.type = 'video/mp4';
         }
