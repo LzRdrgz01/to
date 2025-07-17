@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Reproductor Fluid Player</title>
+  <title>Repro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" rel="stylesheet" />
   <style>
@@ -23,12 +23,6 @@
       aspect-ratio: 16/9;
       background: #000;
     }
-
-    /* 🔒 Ocultar por completo botones de Theater y MiniPlayer */
-    .fluid_theatre_mode_button,
-    .fluid_control_button[data-title="Mini Player"] {
-      display: none !important;
-    }
   </style>
 </head>
 <body>
@@ -36,7 +30,6 @@
     <video id="my-video" controls preload="auto" width="100%" height="100%" playsinline></video>
   </div>
 
-  <!-- FluidPlayer CDN -->
   <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
   <script>
@@ -65,7 +58,6 @@
       if (!videoUrl) {
         alert('Error al decodificar el enlace');
       } else {
-        // Insertar fuente de video
         const videoElement = document.getElementById('my-video');
         const source = document.createElement('source');
         source.src = videoUrl;
@@ -73,11 +65,10 @@
         videoElement.appendChild(source);
         videoElement.load();
 
-        // Inicializar Fluid Player con configuración
-        fluidPlayer('my-video', {
+        const player = fluidPlayer('my-video', {
           layoutControls: {
-            theaterMode: false,    // Desactiva modo teatro
-            miniplayer: false,     // Desactiva miniplayer
+            theaterMode: false,
+            miniPlayer: false,
             skipControls: {
               forward: 10,
               rewind: 10
@@ -86,8 +77,16 @@
               autoHide: true
             }
           },
-          vastOptions: {} // Sin anuncios
+          vastOptions: {}
         });
+
+        // 🔁 Después de inicializar el player, quitamos los botones que no queremos
+        setTimeout(() => {
+          const theatreBtn = document.querySelector('.fluid_theatre_mode_button');
+          const miniPlayerBtn = document.querySelector('.fluid_control_button[data-title="Mini Player"]');
+          if (theatreBtn) theatreBtn.remove();
+          if (miniPlayerBtn) miniPlayerBtn.remove();
+        }, 500);
       }
     }
   </script>
