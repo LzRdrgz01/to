@@ -20,12 +20,19 @@
       aspect-ratio: 16 / 9;
       background: #000;
     }
+    #error-message {
+      color: #ffd700;
+      text-align: center;
+      margin-top: 10px;
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
   <div id="video-wrapper">
     <video id="my-video" controls preload="auto" width="100%" height="100%" playsinline></video>
   </div>
+  <p id="error-message"></p>
 
   <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
   <script>
@@ -42,32 +49,47 @@
       }
     }
 
+    function showError(msg) {
+      document.getElementById('error-message').textContent = msg;
+    }
+
     var encodedVideo = getQueryParam('video');
     if (!encodedVideo) {
-      alert('No se encontró el parámetro de video');
+      showError('No se encontró el parámetro de video');
     } else {
       var videoUrl = decodeBase64(encodedVideo);
       if (!videoUrl) {
-        alert('Error al decodificar el enlace');
+        showError('Error al decodificar el enlace');
       } else {
-        var player = fluidPlayer('my-video', {
-          layoutControls: {
-            controlBar: {
-              autoHide: true
-            }
-          }
-        });
         var videoElement = document.getElementById('my-video');
+        videoElement.innerHTML = ''; // Limpiar fuentes anteriores
+
         var source = document.createElement('source');
         source.src = videoUrl;
+
         if (videoUrl.endsWith('.m3u8')) {
           source.type = 'application/x-mpegURL';
         } else if (videoUrl.endsWith('.mp4')) {
           source.type = 'video/mp4';
         } else {
-          source.type = 'video/mp4';
+          source.type = 'video/mp4'; // tipo por defecto
         }
+
         videoElement.appendChild(source);
+
+        // Inicializar Fluid Player solo una vez
+        if (!window.fluidPlayerInstance) {
+          window.fluidPlayerInstance = fluidPlayer('my-video', {
+            layoutControls: {
+              controlBar: {
+                miniPlayer: false,  // ocultar botón Mini Player
+                theater: false,     // ocultar botón Theater Mode
+                autoHide: true
+              }
+            }
+          });
+        }
+
         videoElement.load();
       }
     }
